@@ -1,1 +1,1 @@
-# Skillmatch-AI
+# SkillmatchAI
