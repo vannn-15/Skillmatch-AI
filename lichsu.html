@@ -84,58 +84,19 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row gap-6">
-            <!-- Sidebar -->
-            <aside class="w-full md:w-64 flex-shrink-0">
-                <div class="bg-white rounded-lg shadow-sm p-4 sticky top-8">
-                    <h2 class="font-semibold text-gray-700 mb-4">Navigation</h2>
-                    <nav>
-                        <ul class="space-y-2">
-                            <li>
-                                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-home w-5"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-blue-50 text-blue-600">
-                                    <i class="fas fa-history w-5"></i>
-                                    <span>Task History</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-chart-line w-5"></i>
-                                    <span>Skill Analytics</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-users w-5"></i>
-                                    <span>Team Overview</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-cog w-5"></i>
-                                    <span>Settings</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </aside>
+           
 
             <!-- Task History Content -->
             <div class="flex-1">
                 <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Task History</h2>
-                            <p class="text-gray-600">Track all completed tasks and analyze skill development</p>
+                            <h2 class="text-2xl font-bold text-gray-800">Lịch sử nhiệm vụ</h2>
+                            <p class="text-gray-600">Theo dõi tất cả các nhiệm vụ đã hoàn thành và phân tích phát triển kĩ năng</p>
                         </div>
                         <button class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                             <i class="fas fa-plus"></i>
-                            <span>New Task</span>
+                            <span>Nhiệm vụ mới</span>
                         </button>
                     </div>
 
@@ -143,41 +104,41 @@
                     <div class="bg-gray-50 rounded-lg p-4 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Time Period</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Khoảng thời gian</label>
                                 <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>Last 7 days</option>
-                                    <option selected>Last 30 days</option>
-                                    <option>Last 3 months</option>
-                                    <option>Last 6 months</option>
-                                    <option>All time</option>
+                                    <option> 7 ngày trước </option>
+                                    <option selected>30 ngày trước</option>
+                                    <option>3 tháng trước</option>
+                                    <option>6 tháng trước </option>
+                                    <option>Tất cả</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Skill</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Kỹ năng</label>
                                 <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>All skills</option>
+                                    <option>Tất cả </option>
                                     <option>JavaScript</option>
                                     <option>React</option>
                                     <option>Node.js</option>
-                                    <option>UI/UX Design</option>
-                                    <option>Project Management</option>
+                                    <option> Thiết kế UI/UX</option>
+                                    <option>Quản lý dự án</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Độ khó</label>
                                 <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>All levels</option>
-                                    <option>Beginner</option>
-                                    <option>Intermediate</option>
-                                    <option>Advanced</option>
-                                    <option>Expert</option>
+                                    <option>Tất cả </option>
+                                    <option>Dễ </option>
+                                    <option>Trung cấp</option>
+                                    <option>Nâng cao </option>
+                                    <option>Chuyên gia </option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">View</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Hình thức/label>
                                 <div class="flex space-x-2">
-                                    <button class="flex-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm">Personal</button>
-                                    <button class="flex-1 bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">Team</button>
+                                    <button class="flex-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm">Cá nhân</button>
+                                    <button class="flex-1 bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">Đội nhóm</button>
                                 </div>
                             </div>
                         </div>
@@ -190,8 +151,8 @@
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Implement user authentication system</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
+                                        <h3 class="font-semibold text-gray-800">Triển khai hệ thống xác thực người dùng</h3>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Hoàn thành</span>
                                     </div>
                                     <div class="flex flex-wrap gap-2 mb-3">
                                         <span class="skill-pill bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">JavaScript</span>
@@ -201,50 +162,50 @@
                                     <div class="flex items-center text-sm text-gray-500 space-x-4">
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 15, 2023</span>
+                                            <span>15 tháng 6, 2023</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-clock text-gray-400"></i>
-                                            <span>8h 30m</span>
+                                            <span>8 giờ 30 phút </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
+                                    <div class="text-sm font-medium text-gray-700 mb-1">Độ khó </div>
                                     <div class="difficulty-indicator rounded-full">
                                         <div class="difficulty-progress" style="width: 70%"></div>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">Advanced</div>
+                                    <div class="text-xs text-gray-500 mt-1">Nâng cao</div>
                                 </div>
                             </div>
                             
                             <!-- AI Assessment (shown on hover) -->
                             <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
+                                <h4 class="font-medium text-gray-800 mb-2">AI đánh giá</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Phát triển kỹ năng: </p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
                                             </div>
                                             <span class="text-xs font-medium">85%</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Significant improvement in security skills</p>
+                                        <p class="text-xs text-gray-500 mt-1">Cải thiện các kỹ năng bảo mật</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Giá trị chiến lược:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-purple-600 h-2 rounded-full" style="width: 90%"></div>
                                             </div>
-                                            <span class="text-xs font-medium">High</span>
+                                            <span class="text-xs font-medium">Cao</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Core functionality for the product</p>
+                                        <p class="text-xs text-gray-500 mt-1">Chức năng cốt lõi sản phẩm</p>
                                     </div>
                                 </div>
                                 <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
+                                    <span>Chi tiết</span>
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
                             </div>
@@ -255,7 +216,7 @@
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Design dashboard UI for analytics</h3>
+                                        <h3 class="font-semibold text-gray-800">Thiết kế giao diện người dùng Dashboard để phân tích </h3>
                                         <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
                                     </div>
                                     <div class="flex flex-wrap gap-2 mb-3">
@@ -266,50 +227,50 @@
                                     <div class="flex items-center text-sm text-gray-500 space-x-4">
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 10, 2023</span>
+                                            <span>10 Tháng 6, 2023</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-clock text-gray-400"></i>
-                                            <span>5h 15m</span>
+                                            <span>5 giờ 15 phút</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
+                                    <div class="text-sm font-medium text-gray-700 mb-1">Độ khó</div>
                                     <div class="difficulty-indicator rounded-full">
                                         <div class="difficulty-progress" style="width: 50%"></div>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">Intermediate</div>
+                                    <div class="text-xs text-gray-500 mt-1">Trung bình</div>
                                 </div>
                             </div>
                             
                             <!-- AI Assessment (shown on hover) -->
                             <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
+                                <h4 class="font-medium text-gray-800 mb-2">AI đánh giá</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Phát triển kỹ năng:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
                                             </div>
                                             <span class="text-xs font-medium">65%</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Improved data visualization skills</p>
+                                        <p class="text-xs text-gray-500 mt-1">Cải thiện kỹ năng trực quan hoá dữ liệu</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Giá trị chiến lược:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-purple-600 h-2 rounded-full" style="width: 75%"></div>
                                             </div>
-                                            <span class="text-xs font-medium">Medium</span>
+                                            <span class="text-xs font-medium">Trung bình</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Important for user engagement</p>
+                                        <p class="text-xs text-gray-500 mt-1">Quan trọng đối với sự tham gia người dùng</p>
                                     </div>
                                 </div>
                                 <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
+                                    <span>Chi tiết</span>
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
                             </div>
@@ -320,8 +281,8 @@
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Code review for payment integration</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
+                                        <h3 class="font-semibold text-gray-800">Đánh giá mã để tích hợp thanh toán</h3>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Hoàn thành</span>
                                     </div>
                                     <div class="flex flex-wrap gap-2 mb-3">
                                         <span class="skill-pill bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">Code Review</span>
@@ -331,50 +292,50 @@
                                     <div class="flex items-center text-sm text-gray-500 space-x-4">
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 5, 2023</span>
+                                            <span>5 Tháng 6, 2023</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-clock text-gray-400"></i>
-                                            <span>3h 45m</span>
+                                            <span>3 giờ 45 phút</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
+                                    <div class="text-sm font-medium text-gray-700 mb-1">Độ khó</div>
                                     <div class="difficulty-indicator rounded-full">
                                         <div class="difficulty-progress" style="width: 60%"></div>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">Intermediate</div>
+                                    <div class="text-xs text-gray-500 mt-1">Trung bình</div>
                                 </div>
                             </div>
                             
                             <!-- AI Assessment (shown on hover) -->
                             <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
+                                <h4 class="font-medium text-gray-800 mb-2">AI đánh giá</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Phát triển kỹ năng:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-blue-600 h-2 rounded-full" style="width: 55%"></div>
                                             </div>
                                             <span class="text-xs font-medium">55%</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Enhanced code quality awareness</p>
+                                        <p class="text-xs text-gray-500 mt-1">Nâng cao nhận thức về chất lượng mã</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Giá trị chiến lượ:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-purple-600 h-2 rounded-full" style="width: 85%"></div>
                                             </div>
-                                            <span class="text-xs font-medium">High</span>
+                                            <span class="text-xs font-medium">Cao</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Critical for financial transactions</p>
+                                        <p class="text-xs text-gray-500 mt-1">Quan trọng đối với các giao dịch tài chính</p>
                                     </div>
                                 </div>
                                 <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
+                                    <span>Chi tiết</span>
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
                             </div>
@@ -385,8 +346,8 @@
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Team standup meeting</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
+                                        <h3 class="font-semibold text-gray-800">Cuộc họp nhóm</h3>
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Hoàn thành</span>
                                     </div>
                                     <div class="flex flex-wrap gap-2 mb-3">
                                         <span class="skill-pill bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Communication</span>
@@ -395,50 +356,50 @@
                                     <div class="flex items-center text-sm text-gray-500 space-x-4">
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 3, 2023</span>
+                                            <span> 3 Tháng 6, 2023</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
                                             <i class="fas fa-clock text-gray-400"></i>
-                                            <span>30m</span>
+                                            <span>30 phút</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
+                                    <div class="text-sm font-medium text-gray-700 mb-1">Độ khó</div>
                                     <div class="difficulty-indicator rounded-full">
                                         <div class="difficulty-progress" style="width: 20%"></div>
                                     </div>
-                                    <div class="text-xs text-gray-500 mt-1">Beginner</div>
+                                    <div class="text-xs text-gray-500 mt-1">Dễ</div>
                                 </div>
                             </div>
                             
                             <!-- AI Assessment (shown on hover) -->
                             <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
+                                <h4 class="font-medium text-gray-800 mb-2">AI Đánh giá</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Phát triển kỹ năng:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-blue-600 h-2 rounded-full" style="width: 30%"></div>
                                             </div>
                                             <span class="text-xs font-medium">30%</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Maintained communication skills</p>
+                                        <p class="text-xs text-gray-500 mt-1">Duy trì kĩ năng giao tiếng</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
+                                        <p class="text-sm text-gray-600 mb-1">Giá trị chiến lược:</p>
                                         <div class="flex items-center space-x-2">
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-purple-600 h-2 rounded-full" style="width: 40%"></div>
                                             </div>
-                                            <span class="text-xs font-medium">Low</span>
+                                            <span class="text-xs font-medium">Thấp/span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Routine team coordination</p>
+                                        <p class="text-xs text-gray-500 mt-1">Phối hợp nhóm thường xuyên</p>
                                     </div>
                                 </div>
                                 <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
+                                    <span>Chi tiết</span>
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </button>
                             </div>
@@ -448,11 +409,11 @@
                     <!-- Pagination -->
                     <div class="mt-8 flex items-center justify-between">
                         <div class="text-sm text-gray-600">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">24</span> tasks
+                            Từ <span class="font-medium">1</span> đến <span class="font-medium">4</span> trong <span class="font-medium">24</span> nhiệm vụ
                         </div>
                         <div class="flex space-x-1">
                             <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                Previous
+                                Trước
                             </button>
                             <button class="px-3 py-1 rounded-md border border-blue-500 bg-blue-50 text-blue-600 text-sm font-medium">
                                 1
@@ -464,7 +425,7 @@
                                 3
                             </button>
                             <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                Next
+                               Sau
                             </button>
                         </div>
                     </div>
@@ -519,17 +480,17 @@
                     </div>
                     
                     <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-3">AI Skill Development Analysis</h4>
+                        <h4 class="font-semibold text-gray-700 mb-3">Phân tích phát triển kỹ năng AI</h4>
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-medium text-gray-700">Security Implementation</span>
+                                    <span class="text-sm font-medium text-gray-700">Triển khai bảo mật</span>
                                     <span class="text-sm font-medium text-blue-600">+85%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Significant improvement in implementing secure authentication flows</p>
+                                <p class="text-xs text-gray-500 mt-1">Cải thiện đáng kể trong việc triển khai các luồng xác thực an toàn</p>
                             </div>
                             <div>
                                 <div class="flex justify-between mb-1">
@@ -539,23 +500,23 @@
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Improved understanding of middleware and route protection</p>
+                                <p class="text-xs text-gray-500 mt-1">Cải thiện sự hiểu biết về phần mềm trung gian và bảo vệ tuyến đường</p>
                             </div>
                             <div>
                                 <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-medium text-gray-700">Problem Solving</span>
+                                    <span class="text-sm font-medium text-gray-700">Giải quyết vấn đề</span>
                                     <span class="text-sm font-medium text-blue-600">+72%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-blue-600 h-2 rounded-full" style="width: 72%"></div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Enhanced ability to debug complex authentication issues</p>
+                                <p class="text-xs text-gray-500 mt-1">Nâng cao khả năng gỡ lỗi các vấn đề xác thực phức tạp</p>
                             </div>
                         </div>
                     </div>
                     
                     <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-3">Strategic Value Assessment</h4>
+                        <h4 class="font-semibold text-gray-700 mb-3">Đánh giá giá trị chiến lược</h4>
                         <div class="bg-blue-50 p-4 rounded-lg">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 mt-1">
@@ -572,7 +533,7 @@
                     </div>
                     
                     <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-2">Recommendations</h4>
+                        <h4 class="font-semibold text-gray-700 mb-2">Gợi ý</h4>
                         <ul class="space-y-2 text-sm text-gray-600">
                             <li class="flex items-start">
                                 <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
@@ -592,10 +553,10 @@
                 
                 <div class="mt-6 flex justify-end space-x-3">
                     <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Export Analysis
+                        Xuất báo cáo phân tích
                     </button>
                     <button class="px-4 py-2 bg-blue-600 rounded-md text-sm font-medium text-white hover:bg-blue-700">
-                        View Related Tasks
+                        Xem các nhiệm vụ liên quan
                     </button>
                 </div>
             </div>
