@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skillmatch AI - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-indigo-600 text-white p-2 rounded-lg mr-3">
+                        <i class="fas fa-brain text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Skillmatch AI</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-bell text-gray-600"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center">
+                        <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile">
+                        <span class="ml-2 text-sm font-medium text-gray-700">Admin</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <!-- Page Title and Filter -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Organization Dashboard</h2>
+                    <p class="text-gray-600">Overview of skills and tasks across your organization</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="inline-flex rounded-md shadow-sm">
+                        <button id="filter-7d" class="px-4 py-2 text-sm font-medium rounded-l-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                            7 Days
+                        </button>
+                        <button id="filter-30d" class="-ml-px px-4 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                            30 Days
+                        </button>
+                        <button id="filter-90d" class="-ml-px px-4 py-2 text-sm font-medium rounded-r-lg border border-gray-300 bg-indigo-600 text-white hover:bg-indigo-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                            90 Days
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Tasks Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover relative group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Total Tasks</p>
+                            <p class="mt-2 text-3xl font-bold text-gray-900">1,248</p>
+                            <p class="mt-1 text-sm text-gray-500">+12% from last period</p>
+                        </div>
+                        <div class="bg-indigo-100 p-3 rounded-lg">
+                            <i class="fas fa-tasks text-indigo-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="tooltip">Total number of tasks assigned in the selected time period</div>
+                </div>
+
+                <!-- Skill Match Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover relative group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Skill Match Rate</p>
+                            <p class="mt-2 text-3xl font-bold text-green-600">78%</p>
+                            <p class="mt-1 text-sm text-gray-500">+5% from last period</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="tooltip">Percentage of tasks assigned to employees with matching skills</div>
+                </div>
+
+                <!-- Productivity Drop Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover relative group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Productivity Drops</p>
+                            <p class="mt-2 text-3xl font-bold text-red-600">14%</p>
+                            <p class="mt-1 text-sm text-gray-500">-3% from last period</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="tooltip">Percentage of tasks showing signs of productivity drop</div>
+                </div>
+
+                <!-- AI Accuracy Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover relative group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">AI Prediction Accuracy</p>
+                            <p class="mt-2 text-3xl font-bold text-blue-600">92%</p>
+                            <p class="mt-1 text-sm text-gray-500">+2% from last model</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <i class="fas fa-robot text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="tooltip">Accuracy of AI model in predicting employee skills</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Task Difficulty Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Task Distribution by Difficulty</h3>
+                        <button onclick="window.location.href='task-log.html'" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">View All Tasks</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="taskDifficultyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Growth Zone Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Employees in Growth Zone</h3>
+                        <button onclick="window.location.href='skill-profiles.html'" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">View Profiles</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="growthZoneChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skill Profiles Card -->
+                <div onclick="window.location.href='skill-profiles.html'" class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover hover:shadow-md cursor-pointer">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-user-tie text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Skill Profiles</h3>
+                            <p class="mt-1 text-sm text-gray-500">View and manage employee skill profiles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Log Card -->
+                <div onclick="window.location.href='task-log.html'" class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover hover:shadow-md cursor-pointer">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-clipboard-list text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Task Log</h3>
+                            <p class="mt-1 text-sm text-gray-500">Detailed view of all assigned tasks</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights Card -->
+                <div onclick="window.location.href='ai-insights.html'" class="bg-white rounded-lg shadow-sm p-6 transition-all duration-300 card-hover hover:shadow-md cursor-pointer">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">AI Insights</h3>
+                            <p class="mt-1 text-sm text-gray-500">Advanced analytics and recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize tooltips
+        document.querySelectorAll('.card-hover').forEach(card => {
+            const tooltip = card.querySelector('.tooltip');
+            
+            card.addEventListener('mouseenter', () => {
+                tooltip.style.opacity = '1';
+                // Position tooltip above the card
+                tooltip.style.bottom = '100%';
+                tooltip.style.left = '50%';
+                tooltip.style.transform = 'translateX(-50%)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                tooltip.style.opacity = '0';
+            });
+        });
+
+        // Time filter functionality
+        document.getElementById('filter-7d').addEventListener('click', function() {
+            updateActiveFilter('7d');
+            // Here you would typically fetch new data for 7 days
+        });
+
+        document.getElementById('filter-30d').addEventListener('click', function() {
+            updateActiveFilter('30d');
+            // Here you would typically fetch new data for 30 days
+        });
+
+        document.getElementById('filter-90d').addEventListener('click', function() {
+            updateActiveFilter('90d');
+            // Here you would typically fetch new data for 90 days
+        });
+
+        function updateActiveFilter(period) {
+            // Reset all buttons
+            document.getElementById('filter-7d').classList.remove('bg-indigo-600', 'text-white');
+            document.getElementById('filter-7d').classList.add('bg-white', 'text-gray-700');
+            document.getElementById('filter-30d').classList.remove('bg-indigo-600', 'text-white');
+            document.getElementById('filter-30d').classList.add('bg-white', 'text-gray-700');
+            document.getElementById('filter-90d').classList.remove('bg-indigo-600', 'text-white');
+            document.getElementById('filter-90d').classList.add('bg-white', 'text-gray-700');
+
+            // Set active button
+            const activeButton = document.getElementById(`filter-${period}`);
+            activeButton.classList.remove('bg-white', 'text-gray-700');
+            activeButton.classList.add('bg-indigo-600', 'text-white');
+        }
+
+        // Charts initialization
+        // Task Difficulty Chart
+        const taskDifficultyCtx = document.getElementById('taskDifficultyChart').getContext('2d');
+        const taskDifficultyChart = new Chart(taskDifficultyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Beginner', 'Intermediate', 'Advanced', 'Expert'],
+                datasets: [{
+                    label: 'Number of Tasks',
+                    data: [320, 450, 280, 198],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.7)',
+                        'rgba(79, 70, 229, 0.7)',
+                        'rgba(67, 56, 202, 0.7)',
+                        'rgba(55, 48, 163, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(99, 102, 241, 1)',
+                        'rgba(79, 70, 229, 1)',
+                        'rgba(67, 56, 202, 1)',
+                        'rgba(55, 48, 163, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        // Navigate to task log with difficulty filter
+                        const difficultyLevel = this.data.labels[elements[0].index];
+                        window.location.href = `task-log.html?difficulty=${difficultyLevel.toLowerCase()}`;
+                    }
+                }
+            }
+        });
+
+        // Growth Zone Chart
+        const growthZoneCtx = document.getElementById('growthZoneChart').getContext('2d');
+        const growthZoneChart = new Chart(growthZoneCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Optimal Zone', 'Learning Zone', 'Comfort Zone', 'Burnout Risk'],
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(249, 168, 37, 0.7)',
+                        'rgba(239, 68, 68, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(249, 168, 37, 1)',
+                        'rgba(239, 68, 68, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        // Navigate to skill profiles with zone filter
+                        const zoneType = this.data.labels[elements[0].index].replace(' ', '-').toLowerCase();
+                        window.location.href = `skill-profiles.html?zone=${zoneType}`;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
