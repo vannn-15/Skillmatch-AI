@@ -1,610 +1,336 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skillmatch AI | Task History</title>
+    <title>SkillmatchAI - Quản trị</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .task-card:hover .ai-assessment {
-            opacity: 1;
-            transform: translateY(0);
+        .user-role-admin {
+            background-color: #3B82F6;
+            color: white;
         }
-        
-        .skill-pill {
-            transition: all 0.2s ease;
+        .user-role-user {
+            background-color: #10B981;
+            color: white;
         }
-        
-        .skill-pill:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .difficulty-indicator {
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, #4ade80, #f59e0b, #ef4444);
-        }
-        
-        .difficulty-progress {
-            height: 100%;
-            background-color: white;
-            border-radius: 2px;
-        }
-        
-        .modal {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .rotate {
-            animation: rotate 2s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .user-role-guest {
+            background-color: #6B7280;
+            color: white;
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                    <i class="fas fa-brain"></i>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-white w-64 border-r border-gray-200 flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold">S</div>
+                    <span class="text-xl font-semibold">SkillmatchAI</span>
                 </div>
-                <h1 class="text-xl font-bold text-gray-800">Skillmatch AI</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-bell text-lg"></i>
+                <button id="closeSidebar" class="md:hidden text-gray-500">
+                    <i class="fas fa-times"></i>
                 </button>
-                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
-                    JD
+            </div>
+            <nav class="flex-1 overflow-y-auto p-4">
+                <div class="space-y-1">
+                    <a href="#" class="block py-2 px-4 bg-blue-50 text-blue-600 rounded-md font-medium">
+                        <i class="fas fa-users mr-2"></i> Quản lý người dùng
+                    </a>
+                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-cog mr-2"></i> Cấu hình hệ thống
+                    </a>
+                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-brain mr-2"></i> Mô hình AI
+                    </a>
+                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-chart-bar mr-2"></i> Báo cáo
+                    </a>
                 </div>
+            </nav>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Admin</p>
+                        <p class="text-sm text-gray-500">Quản trị viên</p>
+                    </div>
+                </div>
+                <button class="mt-4 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+                </button>
             </div>
         </div>
-    </header>
 
-            <!-- Task History Content -->
-            <div class="flex-1">
-                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Task History</h2>
-                            <p class="text-gray-600">Track all completed tasks and analyze skill development</p>
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top navigation -->
+            <header class="bg-white border-b border-gray-200">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                        <a href="index.html" class="flex items-center text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-arrow-left mr-2"></i> Quay lại
+                        </a>
+                    </div>
+                    <h1 class="text-xl font-semibold text-gray-800">Quản trị (Admin Panel)</h1>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <div class="w-8 h-8 rounded-full bg-gray-300"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Quản lý người dùng</h2>
+                    <p class="text-gray-600">Danh sách người dùng, vai trò và trạng thái hoạt động</p>
+                </div>
+
+                <!-- Action bar -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <input type="text" placeholder="Tìm kiếm người dùng..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
                         </div>
-                        <button class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-                            <i class="fas fa-plus"></i>
-                            <span>New Task</span>
+                        <div class="flex items-center space-x-2">
+                            <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Tất cả vai trò</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">Người dùng</option>
+                                <option value="guest">Khách</option>
+                            </select>
+                            <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Tất cả phòng ban</option>
+                                <option value="hr">Nhân sự</option>
+                                <option value="it">Công nghệ</option>
+                                <option value="marketing">Marketing</option>
+                            </select>
+                            <button id="addUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
+                                <i class="fas fa-plus mr-2"></i> Thêm người dùng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users table -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên người dùng</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vai trò</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phòng ban</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">nguyenvana@example.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full user-role-admin">Admin</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Công nghệ</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Hoạt động</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">tranthib@example.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full user-role-user">Người dùng</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nhân sự</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Hoạt động</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Lê Văn C</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">levanc@example.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full user-role-guest">Khách</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Marketing</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Chờ kích hoạt</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-600"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Phạm Thị D</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">phamthid@example.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full user-role-user">Người dùng</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Công nghệ</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Đã khóa</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6">
+                    <div class="text-sm text-gray-500">
+                        Hiển thị <span class="font-medium">1</span> đến <span class="font-medium">4</span> của <span class="font-medium">4</span> người dùng
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-1 border border-blue-500 rounded-md bg-blue-500 text-white">1</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+                            <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
-
-                    <!-- Filters -->
-                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Time Period</label>
-                                <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>Last 7 days</option>
-                                    <option selected>Last 30 days</option>
-                                    <option>Last 3 months</option>
-                                    <option>Last 6 months</option>
-                                    <option>All time</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Skill</label>
-                                <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>All skills</option>
-                                    <option>JavaScript</option>
-                                    <option>React</option>
-                                    <option>Node.js</option>
-                                    <option>UI/UX Design</option>
-                                    <option>Project Management</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
-                                <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
-                                    <option>All levels</option>
-                                    <option>Beginner</option>
-                                    <option>Intermediate</option>
-                                    <option>Advanced</option>
-                                    <option>Expert</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">View</label>
-                                <div class="flex space-x-2">
-                                    <button class="flex-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm">Personal</button>
-                                    <button class="flex-1 bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">Team</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Task List -->
-                    <div class="space-y-4">
-                        <!-- Task Card 1 -->
-                        <div class="task-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Implement user authentication system</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <span class="skill-pill bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">JavaScript</span>
-                                        <span class="skill-pill bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full">Node.js</span>
-                                        <span class="skill-pill bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full">Security</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-500 space-x-4">
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 15, 2023</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                            <span>8h 30m</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
-                                    <div class="difficulty-indicator rounded-full">
-                                        <div class="difficulty-progress" style="width: 70%"></div>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">Advanced</div>
-                                </div>
-                            </div>
-                            
-                            <!-- AI Assessment (shown on hover) -->
-                            <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">85%</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Significant improvement in security skills</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-purple-600 h-2 rounded-full" style="width: 90%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">High</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Core functionality for the product</p>
-                                    </div>
-                                </div>
-                                <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Task Card 2 -->
-                        <div class="task-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Design dashboard UI for analytics</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <span class="skill-pill bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full">UI/UX</span>
-                                        <span class="skill-pill bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">Figma</span>
-                                        <span class="skill-pill bg-indigo-100 text-indigo-800 text-xs px-2 py-0.5 rounded-full">Data Visualization</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-500 space-x-4">
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 10, 2023</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                            <span>5h 15m</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
-                                    <div class="difficulty-indicator rounded-full">
-                                        <div class="difficulty-progress" style="width: 50%"></div>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">Intermediate</div>
-                                </div>
-                            </div>
-                            
-                            <!-- AI Assessment (shown on hover) -->
-                            <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">65%</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Improved data visualization skills</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-purple-600 h-2 rounded-full" style="width: 75%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">Medium</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Important for user engagement</p>
-                                    </div>
-                                </div>
-                                <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Task Card 3 -->
-                        <div class="task-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Code review for payment integration</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <span class="skill-pill bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">Code Review</span>
-                                        <span class="skill-pill bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">Payment Systems</span>
-                                        <span class="skill-pill bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full">Security</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-500 space-x-4">
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 5, 2023</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                            <span>3h 45m</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
-                                    <div class="difficulty-indicator rounded-full">
-                                        <div class="difficulty-progress" style="width: 60%"></div>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">Intermediate</div>
-                                </div>
-                            </div>
-                            
-                            <!-- AI Assessment (shown on hover) -->
-                            <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: 55%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">55%</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Enhanced code quality awareness</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-purple-600 h-2 rounded-full" style="width: 85%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">High</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Critical for financial transactions</p>
-                                    </div>
-                                </div>
-                                <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Task Card 4 -->
-                        <div class="task-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="font-semibold text-gray-800">Team standup meeting</h3>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
-                                    </div>
-                                    <div class="flex flex-wrap gap-2 mb-3">
-                                        <span class="skill-pill bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Communication</span>
-                                        <span class="skill-pill bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded-full">Teamwork</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-500 space-x-4">
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-calendar-alt text-gray-400"></i>
-                                            <span>Jun 3, 2023</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                            <span>30m</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 md:mt-0 md:w-32">
-                                    <div class="text-sm font-medium text-gray-700 mb-1">Difficulty</div>
-                                    <div class="difficulty-indicator rounded-full">
-                                        <div class="difficulty-progress" style="width: 20%"></div>
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">Beginner</div>
-                                </div>
-                            </div>
-                            
-                            <!-- AI Assessment (shown on hover) -->
-                            <div class="ai-assessment absolute inset-0 bg-white bg-opacity-95 p-4 opacity-0 transform translate-y-2 transition-all duration-200">
-                                <h4 class="font-medium text-gray-800 mb-2">AI Assessment</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Skill Development:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: 30%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">30%</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Maintained communication skills</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600 mb-1">Strategic Value:</p>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-purple-600 h-2 rounded-full" style="width: 40%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium">Low</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Routine team coordination</p>
-                                    </div>
-                                </div>
-                                <button class="mt-3 text-blue-600 text-sm font-medium flex items-center space-x-1">
-                                    <span>View detailed analysis</span>
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="mt-8 flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">24</span> tasks
-                        </div>
-                        <div class="flex space-x-1">
-                            <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                Previous
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-blue-500 bg-blue-50 text-blue-600 text-sm font-medium">
-                                1
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                2
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                3
-                            </button>
-                            <button class="px-3 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-sm">
-                                Next
-                            </button>
-                        </div>
-                    </div>
                 </div>
-            </div>
+            </main>
         </div>
-    </main>
+    </div>
 
-    <!-- Task Detail Modal -->
-    <div id="taskModal" class="modal fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none">
-        <div class="modal-overlay absolute inset-0"></div>
-        <div class="modal-container bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl z-50 transform transition-all">
-            <div class="modal-content p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">Task Analysis</h3>
-                    <button id="closeModal" class="text-gray-400 hover:text-gray-500">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div class="space-y-6">
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-2">Implement user authentication system</h4>
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">JavaScript</span>
-                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full">Node.js</span>
-                            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full">Security</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-600 mb-1">Completion Date</p>
-                                <p class="text-sm font-medium">Jun 15, 2023</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600 mb-1">Time Spent</p>
-                                <p class="text-sm font-medium">8h 30m</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600 mb-1">Difficulty</p>
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-3/4 bg-gray-200 rounded-full h-2">
-                                        <div class="bg-orange-500 h-2 rounded-full" style="width: 70%"></div>
-                                    </div>
-                                    <span class="text-xs font-medium">Advanced</span>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600 mb-1">Status</p>
-                                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Completed</span>
-                            </div>
-                        </div>
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                <h3 class="text-lg font-medium text-gray-900">Thêm người dùng mới</h3>
+                <button id="closeAddUserModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form>
+                    <div class="mb-4">
+                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+                        <input type="text" id="fullName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    
-                    <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-3">AI Skill Development Analysis</h4>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-medium text-gray-700">Security Implementation</span>
-                                    <span class="text-sm font-medium text-blue-600">+85%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Significant improvement in implementing secure authentication flows</p>
-                            </div>
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-medium text-gray-700">Node.js Proficiency</span>
-                                    <span class="text-sm font-medium text-blue-600">+65%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Improved understanding of middleware and route protection</p>
-                            </div>
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-medium text-gray-700">Problem Solving</span>
-                                    <span class="text-sm font-medium text-blue-600">+72%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 72%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Enhanced ability to debug complex authentication issues</p>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    
-                    <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-3">Strategic Value Assessment</h4>
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 mt-1">
-                                    <i class="fas fa-lightbulb text-blue-500"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-blue-700">
-                                        This task was highly strategic as it implemented core functionality for user management. 
-                                        The authentication system serves as the foundation for all user interactions in the application.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+                        <select id="role" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="admin">Admin</option>
+                            <option value="user" selected>Người dùng</option>
+                            <option value="guest">Khách</option>
+                        </select>
                     </div>
-                    
-                    <div class="border-t border-gray-200 pt-4">
-                        <h4 class="font-semibold text-gray-700 mb-2">Recommendations</h4>
-                        <ul class="space-y-2 text-sm text-gray-600">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                <span>Consider implementing multi-factor authentication in future iterations</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                <span>Explore OAuth integration to expand login options</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                <span>Review session management best practices for further security improvements</span>
-                            </li>
-                        </ul>
+                    <div class="mb-4">
+                        <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Phòng ban</label>
+                        <select id="department" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="it">Công nghệ</option>
+                            <option value="hr">Nhân sự</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="finance">Tài chính</option>
+                        </select>
                     </div>
-                </div>
-                
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Export Analysis
-                    </button>
-                    <button class="px-4 py-2 bg-blue-600 rounded-md text-sm font-medium text-white hover:bg-blue-700">
-                        View Related Tasks
-                    </button>
-                </div>
+                </form>
+            </div>
+            <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
+                <button id="cancelAddUser" class="px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
+                    Hủy bỏ
+                </button>
+                <button class="px-4 py-2 border border-transparent rounded-md bg-blue-600 text-white hover:bg-blue-700">
+                    Thêm người dùng
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Open modal when clicking on "View detailed analysis" buttons
-        document.querySelectorAll('.task-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Don't open modal if clicking on the "View detailed analysis" button itself
-                if (!e.target.closest('.ai-assessment button')) {
-                    const modal = document.getElementById('taskModal');
-                    modal.classList.remove('opacity-0', 'pointer-events-none');
-                    modal.classList.add('opacity-100', 'pointer-events-auto');
-                    
-                    // Add fade-in animation to modal content
-                    const modalContent = modal.querySelector('.modal-container');
-                    modalContent.classList.add('fade-in');
-                }
-            });
+        // Add user modal
+        const addUserBtn = document.getElementById('addUserBtn');
+        const addUserModal = document.getElementById('addUserModal');
+        const closeAddUserModal = document.getElementById('closeAddUserModal');
+        const cancelAddUser = document.getElementById('cancelAddUser');
+
+        addUserBtn.addEventListener('click', () => {
+            addUserModal.classList.remove('hidden');
         });
 
-        // Close modal
-        document.getElementById('closeModal').addEventListener('click', function() {
-            const modal = document.getElementById('taskModal');
-            modal.classList.remove('opacity-100', 'pointer-events-auto');
-            modal.classList.add('opacity-0', 'pointer-events-none');
+        closeAddUserModal.addEventListener('click', () => {
+            addUserModal.classList.add('hidden');
+        });
+
+        cancelAddUser.addEventListener('click', () => {
+            addUserModal.classList.add('hidden');
         });
 
         // Close modal when clicking outside
-        document.getElementById('taskModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('opacity-100', 'pointer-events-auto');
-                this.classList.add('opacity-0', 'pointer-events-none');
+        addUserModal.addEventListener('click', (e) => {
+            if (e.target === addUserModal) {
+                addUserModal.classList.add('hidden');
             }
-        });
-
-        // Filter functionality (example)
-        document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', function() {
-                // In a real app, this would filter the task list
-                console.log('Filter changed:', this.value);
-                
-                // Show loading indicator
-                const taskList = document.querySelector('.space-y-4');
-                taskList.classList.add('opacity-50');
-                
-                // Simulate loading
-                setTimeout(() => {
-                    taskList.classList.remove('opacity-50');
-                }, 500);
-            });
         });
     </script>
 </body>
