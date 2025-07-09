@@ -3,333 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillmatchAI - Quản trị</title>
+    <title>SkillmatchAI - Nhật ký Task</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .user-role-admin {
-            background-color: #3B82F6;
-            color: white;
+        .task-card:hover .ai-evaluation {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .user-role-user {
-            background-color: #10B981;
-            color: white;
+        .ai-evaluation {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
         }
-        .user-role-guest {
-            background-color: #6B7280;
-            color: white;
+        .difficulty-low {
+            background-color: #bbf7d0;
+            color: #166534;
+        }
+        .difficulty-medium {
+            background-color: #fef08a;
+            color: #854d0e;
+        }
+        .difficulty-high {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+        .strategic-low {
+            border-left: 4px solid #d1d5db;
+        }
+        .strategic-medium {
+            border-left: 4px solid #60a5fa;
+        }
+        .strategic-high {
+            border-left: 4px solid #9333ea;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="sidebar bg-white w-64 border-r border-gray-200 flex flex-col">
-            <div class="flex items-center justify-between p-4 border-b border-gray-200">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold">S</div>
-                    <span class="text-xl font-semibold">SkillmatchAI</span>
-                </div>
-                <button id="closeSidebar" class="md:hidden text-gray-500">
-                    <i class="fas fa-times"></i>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button onclick="window.history.back()" class="text-gray-600 hover:text-blue-600 transition">
+                    <i class="fas fa-arrow-left text-xl"></i>
                 </button>
+                <div class="flex items-center">
+                    <img src="https://via.placeholder.com/40" alt="SkillmatchAI Logo" class="h-8 w-8 mr-2">
+                    <span class="text-xl font-bold text-blue-600">SkillmatchAI</span>
+                </div>
             </div>
-            <nav class="flex-1 overflow-y-auto p-4">
-                <div class="space-y-1">
-                    <a href="#" class="block py-2 px-4 bg-blue-50 text-blue-600 rounded-md font-medium">
-                        <i class="fas fa-users mr-2"></i> Quản lý người dùng
-                    </a>
-                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
-                        <i class="fas fa-cog mr-2"></i> Cấu hình hệ thống
-                    </a>
-                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
-                        <i class="fas fa-brain mr-2"></i> Mô hình AI
-                    </a>
-                    <a href="#" class="block py-2 px-4 text-gray-600 hover:bg-gray-100 rounded-md">
-                        <i class="fas fa-chart-bar mr-2"></i> Báo cáo
-                    </a>
-                </div>
-            </nav>
-            <div class="p-4 border-t border-gray-200">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                        <i class="fas fa-user text-gray-600"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium">Admin</p>
-                        <p class="text-sm text-gray-500">Quản trị viên</p>
-                    </div>
-                </div>
-                <button class="mt-4 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-blue-600 transition">
+                    <i class="fas fa-bell text-xl"></i>
                 </button>
+                <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span class="text-blue-600 font-medium">NV</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0">Nhật ký Task</h1>
+            
+            <!-- Filters -->
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full md:w-auto">
+                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Lọc theo thời gian</option>
+                    <option>Hôm nay</option>
+                    <option>Tuần này</option>
+                    <option>Tháng này</option>
+                    <option>Tất cả</option>
+                </select>
+                
+                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Lọc theo kỹ năng</option>
+                    <option>Lập trình</option>
+                    <option>Thiết kế</option>
+                    <option>Quản lý</option>
+                    <option>Giao tiếp</option>
+                </select>
+                
+                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Lọc theo độ khó</option>
+                    <option>Dễ</option>
+                    <option>Trung bình</option>
+                    <option>Khó</option>
+                </select>
             </div>
         </div>
 
-        <!-- Main content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top navigation -->
-            <header class="bg-white border-b border-gray-200">
-                <div class="flex items-center justify-between p-4">
-                    <div class="flex items-center">
-                        <a href="index.html" class="flex items-center text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-arrow-left mr-2"></i> Quay lại
-                        </a>
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng task</p>
+                        <p class="text-2xl font-bold text-gray-800">128</p>
                     </div>
-                    <h1 class="text-xl font-semibold text-gray-800">Quản trị (Admin Panel)</h1>
-                    <div class="flex items-center space-x-4">
-                        <button class="p-2 text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-bell"></i>
-                        </button>
-                        <div class="w-8 h-8 rounded-full bg-gray-300"></div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-tasks text-blue-600"></i>
                     </div>
                 </div>
-            </header>
-
-            <!-- Main content area -->
-            <main class="flex-1 overflow-y-auto p-6">
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Quản lý người dùng</h2>
-                    <p class="text-gray-600">Danh sách người dùng, vai trò và trạng thái hoạt động</p>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Kỹ năng phát triển</p>
+                        <p class="text-2xl font-bold text-gray-800">15</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-chart-line text-green-600"></i>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Độ khó trung bình</p>
+                        <p class="text-2xl font-bold text-gray-800">Trung bình</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-balance-scale text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <!-- Action bar -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="relative">
-                                <input type="text" placeholder="Tìm kiếm người dùng..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        <!-- Task List -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên Task</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Độ khó</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kỹ năng</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kết quả</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đánh giá AI</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Task 1 -->
+                        <tr class="task-card hover:bg-gray-50 cursor-pointer transition strategic-high" onclick="openTaskModal(1)">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-code text-blue-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Phát triển API mới</div>
+                                        <div class="text-sm text-gray-500">Dự án CRM</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">15/06/2023</div>
+                                <div class="text-sm text-gray-500">3 giờ</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full difficulty-high">Khó</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Node.js</span>
+                                    <span class="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">API Design</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap relative">
+                                <div class="ai-evaluation absolute bottom-full left-0 mb-2 w-64 bg-white shadow-lg rounded-lg p-3 z-10 border border-gray-200">
+                                    <div class="text-xs font-medium text-gray-700 mb-1">Đánh giá AI:</div>
+                                    <div class="text-xs text-gray-600 mb-1"><span class="font-medium">Phát triển kỹ năng:</span> Node.js (nâng cao), Thiết kế API</div>
+                                    <div class="text-xs text-gray-600"><span class="font-medium">Giá trị chiến lược:</span> Cao (ảnh hưởng đến nhiều dự án)</div>
+                                </div>
+                                <i class="fas fa-robot text-blue-500"></i>
+                            </td>
+                        </tr>
+
+                        <!-- Task 2 -->
+                        <tr class="task-card hover:bg-gray-50 cursor-pointer transition strategic-medium" onclick="openTaskModal(2)">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-paint-brush text-green-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Thiết kế giao diện người dùng</div>
+                                        <div class="text-sm text-gray-500">Dự án Mobile App</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">14/06/2023</div>
+                                <div class="text-sm text-gray-500">2 giờ</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full difficulty-medium">Trung bình</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">UI/UX</span>
+                                    <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Figma</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap relative">
+                                <div class="ai-evaluation absolute bottom-full left-0 mb-2 w-64 bg-white shadow-lg rounded-lg p-3 z-10 border border-gray-200">
+                                    <div class="text-xs font-medium text-gray-700 mb-1">Đánh giá AI:</div>
+                                    <div class="text-xs text-gray-600 mb-1"><span class="font-medium">Phát triển kỹ năng:</span> Thiết kế giao diện, Nguyên tắc UX</div>
+                                    <div class="text-xs text-gray-600"><span class="font-medium">Giá trị chiến lược:</span> Trung bình (ảnh hưởng đến 1 dự án)</div>
+                                </div>
+                                <i class="fas fa-robot text-blue-500"></i>
+                            </td>
+                        </tr>
+
+                        <!-- Task 3 -->
+                        <tr class="task-card hover:bg-gray-50 cursor-pointer transition strategic-low" onclick="openTaskModal(3)">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-users text-purple-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Họp team hàng tuần</div>
+                                        <div class="text-sm text-gray-500">Team Development</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">13/06/2023</div>
+                                <div class="text-sm text-gray-500">1 giờ</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full difficulty-low">Dễ</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full">Giao tiếp</span>
+                                    <span class="px-2 py-1 text-xs bg-pink-100 text-pink-800 rounded-full">Lãnh đạo</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap relative">
+                                <div class="ai-evaluation absolute bottom-full left-0 mb-2 w-64 bg-white shadow-lg rounded-lg p-3 z-10 border border-gray-200">
+                                    <div class="text-xs font-medium text-gray-700 mb-1">Đánh giá AI:</div>
+                                    <div class="text-xs text-gray-600 mb-1"><span class="font-medium">Phát triển kỹ năng:</span> Giao tiếp nhóm, Quản lý thời gian</div>
+                                    <div class="text-xs text-gray-600"><span class="font-medium">Giá trị chiến lược:</span> Thấp (hoạt động thường xuyên)</div>
+                                </div>
+                                <i class="fas fa-robot text-blue-500"></i>
+                            </td>
+                        </tr>
+
+                        <!-- Task 4 -->
+                        <tr class="task-card hover:bg-gray-50 cursor-pointer transition strategic-high" onclick="openTaskModal(4)">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-bug text-red-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">Sửa lỗi hệ thống</div>
+                                        <div class="text-sm text-gray-500">Dự án E-commerce</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">12/06/2023</div>
+                                <div class="text-sm text-gray-500">4 giờ</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full difficulty-high">Khó</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">JavaScript</span>
+                                    <span class="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">Debugging</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap relative">
+                                <div class="ai-evaluation absolute bottom-full left-0 mb-2 w-64 bg-white shadow-lg rounded-lg p-3 z-10 border border-gray-200">
+                                    <div class="text-xs font-medium text-gray-700 mb-1">Đánh giá AI:</div>
+                                    <div class="text-xs text-gray-600 mb-1"><span class="font-medium">Phát triển kỹ năng:</span> Giải quyết vấn đề, Phân tích hệ thống</div>
+                                    <div class="text-xs text-gray-600"><span class="font-medium">Giá trị chiến lược:</span> Cao (ảnh hưởng đến doanh thu)</div>
+                                </div>
+                                <i class="fas fa-robot text-blue-500"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6">
+            <div class="text-sm text-gray-500">
+                Hiển thị <span class="font-medium">1</span> đến <span class="font-medium">4</span> của <span class="font-medium">128</span> task
+            </div>
+            <div class="flex space-x-1">
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="px-3 py-1 rounded-md bg-blue-600 text-white">1</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">2</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">3</button>
+                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Task Detail Modal -->
+    <div id="taskModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75" onclick="closeTaskModal()"></div>
+            </div>
+            
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTaskTitle">Phát triển API mới</h3>
+                                    <p class="text-sm text-gray-500" id="modalTaskProject">Dự án CRM</p>
+                                </div>
+                                <button onclick="closeTaskModal()" class="text-gray-400 hover:text-gray-500">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Thời gian</h4>
+                                        <p class="text-sm text-gray-900" id="modalTaskTime">15/06/2023 - 3 giờ</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Độ khó</h4>
+                                        <p class="text-sm"><span class="px-2 py-1 text-xs rounded-full difficulty-high" id="modalTaskDifficulty">Khó</span></p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Kỹ năng</h4>
+                                        <div class="flex flex-wrap gap-1" id="modalTaskSkills">
+                                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Node.js</span>
+                                            <span class="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">API Design</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Kết quả</h4>
+                                        <p class="text-sm"><span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full" id="modalTaskResult">Hoàn thành</span></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-medium text-gray-500">Mô tả</h4>
+                                    <p class="text-sm text-gray-900" id="modalTaskDescription">
+                                        Phát triển API mới cho hệ thống CRM với các tính năng quản lý khách hàng, bao gồm tạo, đọc, cập nhật và xóa thông tin khách hàng. API được xây dựng bằng Node.js và Express, tích hợp với cơ sở dữ liệu MongoDB.
+                                    </p>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-medium text-gray-500">Đánh giá AI</h4>
+                                    <div class="bg-blue-50 p-3 rounded-lg mt-1">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-robot text-blue-500 mt-1 mr-2"></i>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-700 mb-1">Phát triển kỹ năng:</p>
+                                                <p class="text-sm text-gray-600 mb-2" id="modalTaskSkillDev">Node.js (nâng cao), Thiết kế API, Kiến trúc hệ thống</p>
+                                                
+                                                <p class="text-sm font-medium text-gray-700 mb-1">Giá trị chiến lược:</p>
+                                                <p class="text-sm text-gray-600" id="modalTaskStrategicValue">Cao - API này sẽ được sử dụng làm nền tảng cho nhiều dự án trong tương lai, giúp tiết kiệm thời gian phát triển và đảm bảo tính nhất quán giữa các hệ thống.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-medium text-gray-500">Ghi chú cá nhân</h4>
+                                    <textarea class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" rows="3" placeholder="Thêm ghi chú về task này..."></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Tất cả vai trò</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">Người dùng</option>
-                                <option value="guest">Khách</option>
-                            </select>
-                            <select class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Tất cả phòng ban</option>
-                                <option value="hr">Nhân sự</option>
-                                <option value="it">Công nghệ</option>
-                                <option value="marketing">Marketing</option>
-                            </select>
-                            <button id="addUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
-                                <i class="fas fa-plus mr-2"></i> Thêm người dùng
-                            </button>
-                        </div>
                     </div>
                 </div>
-
-                <!-- Users table -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên người dùng</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vai trò</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phòng ban</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-user text-gray-600"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">nguyenvana@example.com</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full user-role-admin">Admin</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Công nghệ</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Hoạt động</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-user text-gray-600"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">tranthib@example.com</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full user-role-user">Người dùng</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nhân sự</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Hoạt động</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-user text-gray-600"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">Lê Văn C</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">levanc@example.com</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full user-role-guest">Khách</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Marketing</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Chờ kích hoạt</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-user text-gray-600"></i>
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">Phạm Thị D</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">phamthid@example.com</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full user-role-user">Người dùng</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Công nghệ</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Đã khóa</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button class="text-blue-600 hover:text-blue-900 mr-3"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Lưu ghi chú
+                    </button>
+                    <button type="button" onclick="closeTaskModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Đóng
+                    </button>
                 </div>
-
-                <!-- Pagination -->
-                <div class="flex items-center justify-between mt-6">
-                    <div class="text-sm text-gray-500">
-                        Hiển thị <span class="font-medium">1</span> đến <span class="font-medium">4</span> của <span class="font-medium">4</span> người dùng
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50" disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="px-3 py-1 border border-blue-500 rounded-md bg-blue-500 text-white">1</button>
-                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">2</button>
-                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                <h3 class="text-lg font-medium text-gray-900">Thêm người dùng mới</h3>
-                <button id="closeAddUserModal" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="p-6">
-                <form>
-                    <div class="mb-4">
-                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-                        <input type="text" id="fullName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
-                        <select id="role" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="admin">Admin</option>
-                            <option value="user" selected>Người dùng</option>
-                            <option value="guest">Khách</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Phòng ban</label>
-                        <select id="department" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="it">Công nghệ</option>
-                            <option value="hr">Nhân sự</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="finance">Tài chính</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3">
-                <button id="cancelAddUser" class="px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50">
-                    Hủy bỏ
-                </button>
-                <button class="px-4 py-2 border border-transparent rounded-md bg-blue-600 text-white hover:bg-blue-700">
-                    Thêm người dùng
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Add user modal
-        const addUserBtn = document.getElementById('addUserBtn');
-        const addUserModal = document.getElementById('addUserModal');
-        const closeAddUserModal = document.getElementById('closeAddUserModal');
-        const cancelAddUser = document.getElementById('cancelAddUser');
+        // Task data
+        const tasks = {
+            1: {
+                title: "Phát triển API mới",
+                project: "Dự án CRM",
+                time: "15/06/2023 - 3 giờ",
+                difficulty: "Khó",
+                skills: [
+                    { name: "Node.js", color: "blue" },
+                    { name: "API Design", color: "purple" }
+                ],
+                result: "Hoàn thành",
+                description: "Phát triển API mới cho hệ thống CRM với các tính năng quản lý khách hàng, bao gồm tạo, đọc, cập nhật và xóa thông tin khách hàng. API được xây dựng bằng Node.js và Express, tích hợp với cơ sở dữ liệu MongoDB.",
+                skillDev: "Node.js (nâng cao), Thiết kế API, Kiến trúc hệ thống",
+                strategicValue: "Cao - API này sẽ được sử dụng làm nền tảng cho nhiều dự án trong tương lai, giúp tiết kiệm thời gian phát triển và đảm bảo tính nhất quán giữa các hệ thống."
+            },
+            2: {
+                title: "Thiết kế giao diện người dùng",
+                project: "Dự án Mobile App",
+                time: "14/06/2023 - 2 giờ",
+                difficulty: "Trung bình",
+                skills: [
+                    { name: "UI/UX", color: "green" },
+                    { name: "Figma", color: "yellow" }
+                ],
+                result: "Hoàn thành",
+                description: "Thiết kế giao diện người dùng cho ứng dụng di động mới, tập trung vào trải nghiệm người dùng và tính thẩm mỹ. Sử dụng Figma để tạo wireframe và prototype.",
+                skillDev: "Thiết kế giao diện, Nguyên tắc UX, Sử dụng Figma",
+                strategicValue: "Trung bình - Ảnh hưởng trực tiếp đến trải nghiệm người dùng của ứng dụng di động, nhưng chỉ áp dụng cho 1 dự án."
+            },
+            3: {
+                title: "Họp team hàng tuần",
+                project: "Team Development",
+                time: "13/06/2023 - 1 giờ",
+                difficulty: "Dễ",
+                skills: [
+                    { name: "Giao tiếp", color: "indigo" },
+                    { name: "Lãnh đạo", color: "pink" }
+                ],
+                result: "Hoàn thành",
+                description: "Họp team hàng tuần để cập nhật tiến độ công việc, thảo luận về các vấn đề phát sinh và lên kế hoạch cho tuần tiếp theo. Chủ trì cuộc họp và ghi chép biên bản.",
+                skillDev: "Giao tiếp nhóm, Quản lý thời gian, Lãnh đạo",
+                strategicValue: "Thấp - Hoạt động thường xuyên, nhưng quan trọng để duy trì sự gắn kết và hiệu quả làm việc của team."
+            },
+            4: {
+                title: "Sửa lỗi hệ thống",
+                project: "Dự án E-commerce",
+                time: "12/06/2023 - 4 giờ",
+                difficulty: "Khó",
+                skills: [
+                    { name: "JavaScript", color: "blue" },
+                    { name: "Debugging", color: "gray" }
+                ],
+                result: "Hoàn thành",
+                description: "Phát hiện và sửa lỗi nghiêm trọng trong hệ thống thanh toán của trang thương mại điện tử. Lỗi gây ra việc tính toán sai tổng số tiền thanh toán trong một số trường hợp đặc biệt.",
+                skillDev: "Giải quyết vấn đề, Phân tích hệ thống, Debugging phức tạp",
+                strategicValue: "Cao - Ảnh hưởng trực tiếp đến doanh thu và trải nghiệm khách hàng trên hệ thống thương mại điện tử."
+            }
+        };
 
-        addUserBtn.addEventListener('click', () => {
-            addUserModal.classList.remove('hidden');
-        });
+        // Open task modal
+        function openTaskModal(taskId) {
+            const task = tasks[taskId];
+            if (!task) return;
+            
+            document.getElementById('modalTaskTitle').textContent = task.title;
+            document.getElementById('modalTaskProject').textContent = task.project;
+            document.getElementById('modalTaskTime').textContent = task.time;
+            document.getElementById('modalTaskDifficulty').textContent = task.difficulty;
+            document.getElementById('modalTaskResult').textContent = task.result;
+            document.getElementById('modalTaskDescription').textContent = task.description;
+            document.getElementById('modalTaskSkillDev').textContent = task.skillDev;
+            document.getElementById('modalTaskStrategicValue').textContent = task.strategicValue;
+            
+            // Update skills
+            const skillsContainer = document.getElementById('modalTaskSkills');
+            skillsContainer.innerHTML = '';
+            task.skills.forEach(skill => {
+                const skillElement = document.createElement('span');
+                skillElement.className = `px-2 py-1 text-xs bg-${skill.color}-100 text-${skill.color}-800 rounded-full`;
+                skillElement.textContent = skill.name;
+                skillsContainer.appendChild(skillElement);
+            });
+            
+            // Show modal
+            document.getElementById('taskModal').classList.remove('hidden');
+        }
 
-        closeAddUserModal.addEventListener('click', () => {
-            addUserModal.classList.add('hidden');
-        });
-
-        cancelAddUser.addEventListener('click', () => {
-            addUserModal.classList.add('hidden');
-        });
+        // Close task modal
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.add('hidden');
+        }
 
         // Close modal when clicking outside
-        addUserModal.addEventListener('click', (e) => {
-            if (e.target === addUserModal) {
-                addUserModal.classList.add('hidden');
+        document.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('taskModal')) {
+                closeTaskModal();
             }
         });
     </script>
