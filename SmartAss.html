@@ -1,555 +1,438 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillmatchAI - Phân công thông minh</title>
+    <title>Skillmatch AI - Smart Assignment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: #f8fafc;
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        }
-        
-        .employee-card {
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
-        
-        .employee-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border-left-color: #3b82f6;
-        }
-        
-        .match-score {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-        
-        .match-score-circle {
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-        
         .skill-bar {
             height: 8px;
             border-radius: 4px;
-            background-color: #e2e8f0;
+            transition: width 0.5s ease-in-out;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .task-details {
+            max-height: 0;
             overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
-        
-        .skill-progress {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        .task-details.active {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
         }
-        
-        .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .has-tooltip:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .match-percentage {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #3b82f6, #10b981);
         }
     </style>
 </head>
-<body>
-    <div class="min-h-screen">
-        <!-- Header -->
-        <header class="gradient-bg text-white shadow-lg">
-              
-            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <button onclick="history.back()" class="p-2 rounded-full hover:bg-white/10 transition">
-                        <i class="fas fa-arrow-left text-xl"></i>
-                    </button>
-                    <div class="flex items-center">
-                        <div class="bg-white text-blue-600 font-bold rounded-lg p-2 mr-3">
-                            <span class="text-blue-600">Skill</span><span class="text-purple-600">match</span><span class="text-blue-400">AI</span>
-                        </div>
-                        <h1 class="text-xl font-semibold">Phân công thông minh</h1>
-                    </div>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i class="fas fa-brain text-xl"></i>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button class="px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition flex items-center">
-                        <i class="fas fa-question-circle mr-2"></i>
-                        Trợ giúp
-                    </button>
+                <h1 class="text-xl font-bold text-gray-800">Skillmatch AI</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-blue-600 font-medium">Smart Assignment</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">Team Dashboard</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">Skill Analytics</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">Settings</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-gray-500 text-xl cursor-pointer"></i>
+                    <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center cursor-pointer">
+                    <i class="fas fa-user text-blue-600"></i>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Gợi ý phân công công việc</h2>
-                    <p class="text-gray-600 mb-6">Hệ thống sẽ đề xuất nhân sự phù hợp nhất dựa trên kỹ năng, độ khó công việc và tiềm năng phát triển.</p>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Panel - Task Selection -->
+            <div class="w-full lg:w-1/3 bg-white rounded-xl shadow-sm p-6 h-fit">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Smart Assignment</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Task</label>
+                    <div class="relative">
+                        <select id="taskSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 appearance-none">
+                            <option value="" disabled selected>Choose a task</option>
+                            <option value="1">Develop new user authentication system</option>
+                            <option value="2">Create marketing campaign for Q4</option>
+                            <option value="3">Optimize database performance</option>
+                            <option value="4">Design mobile app interface</option>
+                            <option value="5">Conduct market research</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Primary Skill Required</label>
+                    <div class="relative">
+                        <select id="skillSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 appearance-none">
+                            <option value="" disabled selected>Select primary skill</option>
+                            <option value="backend">Backend Development</option>
+                            <option value="frontend">Frontend Development</option>
+                            <option value="design">UI/UX Design</option>
+                            <option value="marketing">Digital Marketing</option>
+                            <option value="research">Market Research</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Task Difficulty</label>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <input id="easy" name="difficulty" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                            <label for="easy" class="ml-2 block text-sm text-gray-700">Easy</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="medium" name="difficulty" type="radio" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                            <label for="medium" class="ml-2 block text-sm text-gray-700">Medium</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="hard" name="difficulty" type="radio" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                            <label for="hard" class="ml-2 block text-sm text-gray-700">Hard</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="findMatchBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition duration-300 flex items-center justify-center">
+                    <i class="fas fa-search mr-2"></i> Find Best Matches
+                </button>
+                
+                <!-- Task Details (hidden by default) -->
+                <div id="taskDetails" class="task-details mt-6 border-t pt-4">
+                    <h3 class="font-medium text-gray-800 mb-2">Task Details</h3>
+                    <p class="text-sm text-gray-600 mb-4">Develop a new user authentication system using OAuth 2.0 and JWT tokens. The system should support multi-factor authentication and integrate with our existing user database.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Task Selection -->
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Chọn công việc</label>
-                                <select id="task-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">-- Chọn công việc --</option>
-                                    <option value="1">Phát triển giao diện người dùng</option>
-                                    <option value="2">Phân tích dữ liệu khách hàng</option>
-                                    <option value="3">Triển khai hệ thống bảo mật</option>
-                                    <option value="4">Tối ưu hóa hiệu suất ứng dụng</option>
-                                    <option value="5">Đào tạo nhân viên mới</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Kỹ năng chính yêu cầu</label>
-                                <select id="skill-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">-- Chọn kỹ năng --</option>
-                                    <option value="frontend">Frontend Development</option>
-                                    <option value="backend">Backend Development</option>
-                                    <option value="data">Data Analysis</option>
-                                    <option value="design">UI/UX Design</option>
-                                    <option value="security">Cybersecurity</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Độ khó</label>
-                                <div class="flex space-x-4">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="difficulty" class="h-4 w-4 text-blue-600" checked>
-                                        <span class="ml-2 text-gray-700">Tất cả</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="difficulty" class="h-4 w-4 text-blue-600">
-                                        <span class="ml-2 text-gray-700">Dễ</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="difficulty" class="h-4 w-4 text-blue-600">
-                                        <span class="ml-2 text-gray-700">Trung bình</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="difficulty" class="h-4 w-4 text-blue-600">
-                                        <span class="ml-2 text-gray-700">Khó</span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <button id="find-match" class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover:opacity-90 transition flex items-center justify-center">
-                                <i class="fas fa-search mr-2"></i> Tìm nhân sự phù hợp
-                            </button>
+                    <div class="mb-3">
+                        <span class="text-sm font-medium text-gray-700">Required Skills:</span>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Backend</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Security</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">OAuth</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">JWT</span>
                         </div>
-                        
-                        <!-- Task Details -->
-                        <div class="md:col-span-2 bg-gray-50 p-6 rounded-lg">
-                            <div id="task-details-placeholder" class="text-center py-10">
-                                <i class="fas fa-tasks text-4xl text-gray-300 mb-4"></i>
-                                <h3 class="text-lg font-medium text-gray-500">Chọn công việc để xem đề xuất phân công</h3>
-                            </div>
-                            
-                            <div id="task-details" class="hidden">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h3 id="task-title" class="text-xl font-bold text-gray-800"></h3>
-                                        <p id="task-description" class="text-gray-600 mt-1"></p>
-                                    </div>
-                                    <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                        <span id="task-difficulty"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-medium text-gray-700 mb-2">Kỹ năng yêu cầu:</h4>
-                                    <div id="required-skills" class="flex flex-wrap gap-2"></div>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-medium text-gray-700 mb-2">Nhân sự phù hợp:</h4>
-                                    <div id="employee-suggestions" class="space-y-4"></div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    
+                    <div>
+                        <span class="text-sm font-medium text-gray-700">Estimated Duration:</span>
+                        <span class="text-sm text-gray-600 ml-2">2-3 weeks</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Employee Profile Modal -->
-            <div id="employee-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-                <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <h3 id="modal-employee-name" class="text-2xl font-bold text-gray-800"></h3>
-                                <p id="modal-employee-position" class="text-gray-600"></p>
+            <!-- Right Panel - Results -->
+            <div class="w-full lg:w-2/3">
+                <div id="resultsHeader" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800">Top Matches</h2>
+                        <div class="text-sm text-gray-500">Sorted by match score</div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        The system analyzes skill match, task difficulty, learning potential, and past performance to recommend the best assignments.
+                    </div>
+                </div>
+                
+                <div id="resultsContainer" class="space-y-4">
+                    <!-- Default state before search -->
+                    <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                        <div class="mx-auto w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-user-tie text-blue-500 text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800 mb-2">Find the perfect match</h3>
+                        <p class="text-gray-600 mb-6">Select a task and required skills to see intelligent assignment recommendations based on your team's capabilities.</p>
+                        <button class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition duration-300">
+                            How it works <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- These will be shown dynamically when search is performed -->
+                    <div class="hidden profile-card bg-white rounded-xl shadow-sm p-6 transition duration-300 cursor-pointer">
+                        <div class="flex flex-col md:flex-row md:items-center">
+                            <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-blue-600 text-2xl"></i>
+                                </div>
                             </div>
-                            <button id="close-modal" class="text-gray-400 hover:text-gray-600">
-                                <i class="fas fa-times text-xl"></i>
-                            </button>
+                            <div class="flex-grow">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-800">Alex Johnson</h3>
+                                        <p class="text-sm text-gray-600">Senior Backend Developer</p>
+                                    </div>
+                                    <div class="mt-2 md:mt-0">
+                                        <span class="match-percentage">92% Match</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                        <span>Skill Fit</span>
+                                        <span>95%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="skill-bar bg-blue-500 rounded-full h-2" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                        <span>Challenge Fit</span>
+                                        <span>88%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="skill-bar bg-green-500 rounded-full h-2" style="width: 88%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                        <span>Growth Potential</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="skill-bar bg-purple-500 rounded-full h-2" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <h4 class="font-medium text-gray-700 mb-2">Độ phù hợp</h4>
-                                <div class="flex items-center justify-center">
-                                    <div class="match-score">
-                                        <svg viewBox="0 0 36 36" class="circular-chart">
-                                            <path class="circle-bg" d="M18 2.0845
-                                                a 15.9155 15.9155 0 0 1 0 31.831
-                                                a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e2e8f0" stroke-width="3"/>
-                                            <path id="match-circle" class="match-score-circle circle" stroke-dasharray="0, 100" d="M18 2.0845
-                                                a 15.9155 15.9155 0 0 1 0 31.831
-                                                a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3" stroke-linecap="round"/>
-                                        </svg>
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <span id="match-percent" class="text-xl font-bold text-gray-800">0%</span>
+                        <div class="mt-4 pt-4 border-t">
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Why this match?</h4>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>Expert in authentication systems and security protocols</li>
+                                <li>Recently completed similar project with 98% satisfaction</li>
+                                <li>Has mentoring capacity to guide junior team members</li>
+                            </ul>
+                            
+                            <div class="mt-4 flex justify-end">
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition duration-300 flex items-center">
+                                    Assign Task <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <span class="font-medium text-gray-800">Skillmatch AI</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-blue-600">Privacy</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600">Terms</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600">Help Center</a>
+                </div>
+            </div>
+            <div class="mt-4 text-center md:text-left text-sm text-gray-500">
+                © 2023 Skillmatch AI. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Task selection dropdown
+            const taskSelect = document.getElementById('taskSelect');
+            const taskDetails = document.getElementById('taskDetails');
+            
+            taskSelect.addEventListener('change', function() {
+                if (this.value) {
+                    taskDetails.classList.add('active');
+                } else {
+                    taskDetails.classList.remove('active');
+                }
+            });
+            
+            // Find matches button
+            const findMatchBtn = document.getElementById('findMatchBtn');
+            const resultsHeader = document.getElementById('resultsHeader');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const profileCards = document.querySelectorAll('.profile-card');
+            
+            findMatchBtn.addEventListener('click', function() {
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Finding matches...';
+                this.disabled = true;
+                
+                // Simulate API call delay
+                setTimeout(function() {
+                    // Show results
+                    resultsHeader.classList.remove('hidden');
+                    
+                    // Clear default content
+                    resultsContainer.innerHTML = '';
+                    
+                    // Add sample profile cards
+                    const sampleProfiles = [
+                        {
+                            name: "Alex Johnson",
+                            role: "Senior Backend Developer",
+                            match: 92,
+                            skillFit: 95,
+                            challengeFit: 88,
+                            growthPotential: 85,
+                            reasons: [
+                                "Expert in authentication systems and security protocols",
+                                "Recently completed similar project with 98% satisfaction",
+                                "Has mentoring capacity to guide junior team members"
+                            ]
+                        },
+                        {
+                            name: "Maria Garcia",
+                            role: "Backend Developer",
+                            match: 87,
+                            skillFit: 90,
+                            challengeFit: 82,
+                            growthPotential: 91,
+                            reasons: [
+                                "Strong experience with OAuth implementations",
+                                "Quick learner with excellent problem-solving skills",
+                                "Would benefit from expanding security expertise"
+                            ]
+                        },
+                        {
+                            name: "Sam Wilson",
+                            role: "Full Stack Developer",
+                            match: 79,
+                            skillFit: 85,
+                            challengeFit: 76,
+                            growthPotential: 72,
+                            reasons: [
+                                "Capable of handling both frontend and backend components",
+                                "Has some experience with JWT implementations",
+                                "Would benefit from deeper security specialization"
+                            ]
+                        }
+                    ];
+                    
+                    sampleProfiles.forEach(profile => {
+                        const profileCard = document.createElement('div');
+                        profileCard.className = 'profile-card bg-white rounded-xl shadow-sm p-6 transition duration-300 cursor-pointer mb-4';
+                        profileCard.innerHTML = `
+                            <div class="flex flex-col md:flex-row md:items-center">
+                                <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-user text-blue-600 text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-gray-800">${profile.name}</h3>
+                                            <p class="text-sm text-gray-600">${profile.role}</p>
+                                        </div>
+                                        <div class="mt-2 md:mt-0">
+                                            <span class="match-percentage">${profile.match}% Match</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                            <span>Skill Fit</span>
+                                            <span>${profile.skillFit}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="skill-bar bg-blue-500 rounded-full h-2" style="width: ${profile.skillFit}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                            <span>Challenge Fit</span>
+                                            <span>${profile.challengeFit}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="skill-bar bg-green-500 rounded-full h-2" style="width: ${profile.challengeFit}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                            <span>Growth Potential</span>
+                                            <span>${profile.growthPotential}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="skill-bar bg-purple-500 rounded-full h-2" style="width: ${profile.growthPotential}%"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="md:col-span-2">
-                                <h4 class="font-medium text-gray-700 mb-2">Lý do lựa chọn</h4>
-                                <ul id="match-reasons" class="list-disc pl-5 space-y-1 text-gray-700"></ul>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Kỹ năng chính</h4>
-                            <div id="employee-skills" class="space-y-3"></div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-3">Dự đoán hiệu quả</h4>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <div class="flex items-center mb-2">
-                                    <i class="fas fa-chart-line text-blue-500 mr-2"></i>
-                                    <span class="font-medium text-blue-800">Khả năng hoàn thành:</span>
-                                    <span id="completion-chance" class="ml-2 font-bold"></span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <i class="fas fa-clock text-blue-500 mr-2"></i>
-                                    <span class="font-medium text-blue-800">Thời gian ước tính:</span>
-                                    <span id="estimated-time" class="ml-2 font-bold"></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-blue-500 mr-2"></i>
-                                    <span class="font-medium text-blue-800">Tiềm năng phát triển:</span>
-                                    <span id="growth-potential" class="ml-2 font-bold"></span>
+                            <div class="mt-4 pt-4 border-t">
+                                <h4 class="text-sm font-medium text-gray-700 mb-2">Why this match?</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                    ${profile.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                                </ul>
+                                
+                                <div class="mt-4 flex justify-end">
+                                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition duration-300 flex items-center">
+                                        Assign Task <i class="fas fa-paper-plane ml-2"></i>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        `;
                         
-                        <div class="flex justify-end space-x-3">
-                            <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                                <i class="fas fa-user-circle mr-2"></i> Xem hồ sơ
-                            </button>
-                            <button class="gradient-bg text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition flex items-center">
-                                <i class="fas fa-paper-plane mr-2"></i> Phân công
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        // Sample data
-        const tasks = {
-            "1": {
-                title: "Phát triển giao diện người dùng",
-                description: "Thiết kế và triển khai giao diện người dùng mới cho ứng dụng quản lý dự án với ReactJS.",
-                difficulty: "Trung bình",
-                requiredSkills: ["ReactJS", "JavaScript", "HTML/CSS", "UI/UX Design"]
-            },
-            "2": {
-                title: "Phân tích dữ liệu khách hàng",
-                description: "Phân tích hành vi khách hàng từ dữ liệu 6 tháng gần nhất và đề xuất chiến lược cải thiện.",
-                difficulty: "Khó",
-                requiredSkills: ["Data Analysis", "Python", "SQL", "Statistics"]
-            },
-            "3": {
-                title: "Triển khai hệ thống bảo mật",
-                description: "Nâng cấp hệ thống bảo mật cho ứng dụng web, bao gồm xác thực 2 yếu tố và mã hóa dữ liệu.",
-                difficulty: "Khó",
-                requiredSkills: ["Cybersecurity", "Node.js", "OAuth", "Encryption"]
-            },
-            "4": {
-                title: "Tối ưu hóa hiệu suất ứng dụng",
-                description: "Phân tích và cải thiện hiệu suất của ứng dụng web, giảm thời gian tải trang.",
-                difficulty: "Trung bình",
-                requiredSkills: ["Performance Optimization", "JavaScript", "Chrome DevTools", "Caching"]
-            },
-            "5": {
-                title: "Đào tạo nhân viên mới",
-                description: "Phát triển chương trình đào tạo và hướng dẫn nhân viên mới về quy trình làm việc.",
-                difficulty: "Dễ",
-                requiredSkills: ["Training", "Communication", "Documentation", "Mentoring"]
-            }
-        };
-
-        const employees = [
-            {
-                id: 1,
-                name: "Nguyễn Văn A",
-                position: "Frontend Developer",
-                skills: [
-                    { name: "ReactJS", level: 90 },
-                    { name: "JavaScript", level: 85 },
-                    { name: "HTML/CSS", level: 95 },
-                    { name: "UI/UX Design", level: 70 },
-                    { name: "Performance Optimization", level: 60 }
-                ],
-                matchReasons: [
-                    "Kỹ năng ReactJS xuất sắc (90/100)",
-                    "Kinh nghiệm tương tự với 5 dự án trước",
-                    "Độ khó phù hợp với năng lực hiện tại",
-                    "Có tiềm năng phát triển kỹ năng UI/UX"
-                ],
-                completionChance: "Cao (85%)",
-                estimatedTime: "2-3 tuần",
-                growthPotential: "Tốt"
-            },
-            {
-                id: 2,
-                name: "Trần Thị B",
-                position: "Data Analyst",
-                skills: [
-                    { name: "Data Analysis", level: 92 },
-                    { name: "Python", level: 88 },
-                    { name: "SQL", level: 95 },
-                    { name: "Statistics", level: 90 },
-                    { name: "Machine Learning", level: 75 }
-                ],
-                matchReasons: [
-                    "Chuyên môn phân tích dữ liệu (92/100)",
-                    "Đã hoàn thành 3 dự án tương tự",
-                    "Có khả năng đề xuất insights giá trị",
-                    "Tiềm năng phát triển sang Machine Learning"
-                ],
-                completionChance: "Rất cao (92%)",
-                estimatedTime: "3-4 tuần",
-                growthPotential: "Xuất sắc"
-            },
-            {
-                id: 3,
-                name: "Lê Văn C",
-                position: "Security Engineer",
-                skills: [
-                    { name: "Cybersecurity", level: 95 },
-                    { name: "Node.js", level: 80 },
-                    { name: "OAuth", level: 90 },
-                    { name: "Encryption", level: 93 },
-                    { name: "Network Security", level: 88 }
-                ],
-                matchReasons: [
-                    "Chuyên gia bảo mật (95/100)",
-                    "Chứng chỉ CISSP và CEH",
-                    "Đã triển khai thành công 2 hệ thống tương tự",
-                    "Có thể đào tạo thêm cho team về bảo mật"
-                ],
-                completionChance: "Rất cao (95%)",
-                estimatedTime: "4-5 tuần",
-                growthPotential: "Tốt"
-            }
-        ];
-
-        // DOM elements
-        const taskSelect = document.getElementById('task-select');
-        const skillSelect = document.getElementById('skill-select');
-        const findMatchBtn = document.getElementById('find-match');
-        const taskDetailsPlaceholder = document.getElementById('task-details-placeholder');
-        const taskDetails = document.getElementById('task-details');
-        const taskTitle = document.getElementById('task-title');
-        const taskDescription = document.getElementById('task-description');
-        const taskDifficulty = document.getElementById('task-difficulty');
-        const requiredSkills = document.getElementById('required-skills');
-        const employeeSuggestions = document.getElementById('employee-suggestions');
-        const employeeModal = document.getElementById('employee-modal');
-        const closeModal = document.getElementById('close-modal');
-        const modalEmployeeName = document.getElementById('modal-employee-name');
-        const modalEmployeePosition = document.getElementById('modal-employee-position');
-        const matchCircle = document.getElementById('match-circle');
-        const matchPercent = document.getElementById('match-percent');
-        const matchReasons = document.getElementById('match-reasons');
-        const employeeSkills = document.getElementById('employee-skills');
-        const completionChance = document.getElementById('completion-chance');
-        const estimatedTime = document.getElementById('estimated-time');
-        const growthPotential = document.getElementById('growth-potential');
-
-        // Event listeners
-        taskSelect.addEventListener('change', function() {
-            if (this.value) {
-                showTaskDetails(this.value);
-            } else {
-                hideTaskDetails();
-            }
-        });
-
-        findMatchBtn.addEventListener('click', function() {
-            if (taskSelect.value) {
-                findMatchingEmployees(taskSelect.value);
-            } else {
-                alert('Vui lòng chọn công việc trước khi tìm nhân sự phù hợp');
-            }
-        });
-
-        closeModal.addEventListener('click', function() {
-            employeeModal.classList.add('hidden');
-        });
-
-        // Functions
-        function showTaskDetails(taskId) {
-            const task = tasks[taskId];
-            
-            taskTitle.textContent = task.title;
-            taskDescription.textContent = task.description;
-            taskDifficulty.textContent = task.difficulty;
-            
-            // Update required skills
-            requiredSkills.innerHTML = '';
-            task.requiredSkills.forEach(skill => {
-                const skillBadge = document.createElement('span');
-                skillBadge.className = 'bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm';
-                skillBadge.textContent = skill;
-                requiredSkills.appendChild(skillBadge);
+                        resultsContainer.appendChild(profileCard);
+                    });
+                    
+                    // Reset button
+                    findMatchBtn.innerHTML = '<i class="fas fa-search mr-2"></i> Find Best Matches';
+                    findMatchBtn.disabled = false;
+                }, 1500);
             });
             
-            taskDetailsPlaceholder.classList.add('hidden');
-            taskDetails.classList.remove('hidden');
-        }
-
-        function hideTaskDetails() {
-            taskDetailsPlaceholder.classList.remove('hidden');
-            taskDetails.classList.add('hidden');
-            employeeSuggestions.innerHTML = '';
-        }
-
-        function findMatchingEmployees(taskId) {
-            const task = tasks[taskId];
-            employeeSuggestions.innerHTML = '';
-            
-            // In a real app, this would be a more sophisticated matching algorithm
-            const matchedEmployees = employees.filter(employee => {
-                return employee.skills.some(skill => 
-                    task.requiredSkills.includes(skill.name)
-                );
-            });
-            
-            if (matchedEmployees.length === 0) {
-                employeeSuggestions.innerHTML = `
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="fas fa-user-slash text-3xl mb-3"></i>
-                        <p>Không tìm thấy nhân sự phù hợp. Vui lòng thử với tiêu chí khác.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            matchedEmployees.forEach(employee => {
-                // Calculate match percentage (simplified)
-                const matchedSkills = employee.skills.filter(skill => 
-                    task.requiredSkills.includes(skill.name)
-                );
-                const matchPercentage = Math.round(
-                    matchedSkills.reduce((sum, skill) => sum + skill.level, 0) / 
-                    (matchedSkills.length * 100) * 100
-                );
-                
-                const employeeCard = document.createElement('div');
-                employeeCard.className = 'employee-card bg-white p-4 rounded-lg shadow-sm border cursor-pointer fade-in';
-                employeeCard.innerHTML = `
-                    <div class="flex items-start">
-                        <div class="bg-blue-100 text-blue-800 w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-user text-xl"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-bold text-gray-800">${employee.name}</h4>
-                                    <p class="text-gray-600 text-sm">${employee.position}</p>
-                                </div>
-                                <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                                    ${matchPercentage}% phù hợp
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <h5 class="text-sm font-medium text-gray-700 mb-1">Kỹ năng phù hợp:</h5>
-                                <div class="flex flex-wrap gap-1">
-                                    ${matchedSkills.map(skill => `
-                                        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">
-                                            ${skill.name} (${skill.level}/100)
-                                        </span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                employeeCard.addEventListener('click', () => showEmployeeModal(employee, matchPercentage));
-                employeeSuggestions.appendChild(employeeCard);
-            });
-        }
-
-        function showEmployeeModal(employee, matchPercentage) {
-            modalEmployeeName.textContent = employee.name;
-            modalEmployeePosition.textContent = employee.position;
-            
-            // Animate the match percentage circle
-            const circumference = 2 * Math.PI * 15.9155;
-            const offset = circumference - (matchPercentage / 100) * circumference;
-            matchCircle.setAttribute('stroke-dasharray', `${circumference - offset} ${offset}`);
-            matchCircle.setAttribute('stroke', matchPercentage > 80 ? '#10b981' : matchPercentage > 60 ? '#3b82f6' : '#f59e0b');
-            
-            let count = 0;
-            const interval = setInterval(() => {
-                if (count >= matchPercentage) {
-                    clearInterval(interval);
+            // Profile card click handler
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.profile-card')) {
+                    const card = e.target.closest('.profile-card');
+                    const details = card.querySelector('.mt-4.pt-4.border-t');
+                    
+                    // Toggle details visibility
+                    if (details.style.maxHeight) {
+                        details.style.maxHeight = null;
+                    } else {
+                        details.style.maxHeight = details.scrollHeight + 'px';
+                    }
                 }
-                matchPercent.textContent = `${count}%`;
-                count++;
-            }, 20);
-            
-            // Set match reasons
-            matchReasons.innerHTML = '';
-            employee.matchReasons.forEach(reason => {
-                const li = document.createElement('li');
-                li.textContent = reason;
-                matchReasons.appendChild(li);
             });
-            
-            // Set skills
-            employeeSkills.innerHTML = '';
-            employee.skills.forEach(skill => {
-                const skillDiv = document.createElement('div');
-                skillDiv.className = 'skill-item';
-                skillDiv.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm font-medium text-gray-700">${skill.name}</span>
-                        <span class="text-xs text-gray-500">${skill.level}/100</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class
+        });
+    </script>
+</body>
 </html>
